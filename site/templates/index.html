@@ -1,42 +1,62 @@
 
 <head>
-    <script src="https://code.highcharts.com/highcharts.src.js"></script>
     <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
     <script type="text/javascript">
+
+        const adjust_time_by_hours = (time, hours) => {
+
+        }
 
         $.getJSON('/data', function (csv) {
 
+            // An object with datetime keys and arrays as values
+            let time_buckets = {};
+            csv = csv.map((c) => {
+                if (time_buckets[c.date] == undefined) {
+                    time_buckets[c.date] = []
+                }
+                time_buckets[c.date].push(c);
+            });
+            debugger;
+
+            let columns = [Object.keys(time_buckets).reduce((acc, val) => { 
+                acc.push(val); return acc 
+            }, [null])];
+
+            Object.keys(time_buckets).map((c) => columns.push([c, time_buckets[c].length]));
+
             Highcharts.chart('container', {
 
-                data: {
-                    csv: csv
+                chart: {
+                    type: "column",
                 },
 
                 title: {
-                    text: 'Title'
+                    text: 'Number of devices on network'
                 },
 
-                subtitle: {
-                    text: 'Subtitle'
-                },
-
-                xAxis: {
-                    tickInterval: 3600 * 1000, // one week
-                    tickWidth: 0,
-                    gridLineWidth: 1,
-                    labels: {
-                        align: 'left',
-                        x: 3,
-                        y: -3
-                    }
-                },
+                data: {
+                    columns: [
+                        Object.keys(time_buckets).reduce((acc, val) => { 
+                            acc.push(val); 
+                            return acc;
+                        }, [null]),
+                        Object.keys(time_buckets).reduce((acc, val) => {
+                            acc.push(time_buckets[val].length); 
+                            return acc;
+                        }, ["Devices"]),
+                    ],
+                }
             });
-
 
         });
 
     </script>
 </head>
 <body>
-    <div id="container"></div>
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 </body>
