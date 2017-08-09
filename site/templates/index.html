@@ -1,4 +1,42 @@
 
+<head>
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
+
+        $.getJSON('/data', function (csv) {
+
+            Highcharts.chart('container', {
+
+                data: {
+                    csv: csv
+                },
+
+                title: {
+                    text: 'Title'
+                },
+
+                subtitle: {
+                    text: 'Subtitle'
+                },
+
+                xAxis: {
+                    tickInterval: 3600 * 1000, // one week
+                    tickWidth: 0,
+                    gridLineWidth: 1,
+                    labels: {
+                        align: 'left',
+                        x: 3,
+                        y: -3
+                    }
+                },
+            });
+
+
+        });
+
+    </script>
+</head>
 <body>
-    <div>{{test}}</div>
+    <div id="container"></div>
 </body>

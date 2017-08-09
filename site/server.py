@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    context = {"test": "Jack"}
+    context = {}
     return render_template('index.html', **context)
 
 @app.route("/data")

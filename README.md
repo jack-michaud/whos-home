@@ -6,3 +6,8 @@ Dumps a parsed nmap scan to a CSV.
 ### Todo
 - Analytics in a self-contained web server?
 - Upload the CSV somewhere
+
+
+### Usage
+- `FLASK_APP=server.py flask run`
+
