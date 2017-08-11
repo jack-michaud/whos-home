@@ -5,11 +5,12 @@
     <script src="https://code.highcharts.com/modules/data.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
+</head>
+<body>
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <ul id="recent_devices"></ul>
+
     <script type="text/javascript">
-
-        const adjust_time_by_hours = (time, hours) => {
-
-        }
 
         $.getJSON('/data', function (csv) {
 
@@ -21,10 +22,9 @@
                 }
                 time_buckets[c.date].push(c);
             });
-            debugger;
 
-            let columns = [Object.keys(time_buckets).reduce((acc, val) => { 
-                acc.push(val); return acc 
+            let columns = [Object.keys(time_buckets).reduce((acc, val) => {
+                acc.push(val); return acc
             }, [null])];
 
             Object.keys(time_buckets).map((c) => columns.push([c, time_buckets[c].length]));
@@ -41,22 +41,30 @@
 
                 data: {
                     columns: [
-                        Object.keys(time_buckets).reduce((acc, val) => { 
-                            acc.push(val); 
+                        Object.keys(time_buckets).reduce((acc, val) => {
+                            acc.push(val);
                             return acc;
                         }, [null]),
                         Object.keys(time_buckets).reduce((acc, val) => {
-                            acc.push(time_buckets[val].length); 
+                            acc.push(time_buckets[val].length);
                             return acc;
                         }, ["Devices"]),
                     ],
                 }
             });
 
+            // Print most recent devices
+            var recent_devices_elt = document.getElementById('recent_devices');
+            var most_recent_key = ((x) => x[x.length-1])(Object.keys(time_buckets));
+            time_buckets[most_recent_key].map((d) => {
+                  var li = document.createElement("li");
+                  li.appendChild(document.createTextNode(d.hostname));
+                  recent_devices_elt.appendChild(li);
+            })
+
         });
 
+        
+
     </script>
-</head>
-<body>
-    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 </body>
